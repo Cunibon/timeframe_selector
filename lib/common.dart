@@ -12,3 +12,14 @@ String timeRangeToString(DateTimeRange timeRange) {
   );
   return "$startString - $endString";
 }
+
+DateTime toTime(DateTime dateTime) {
+  return DateTime(
+    0,
+    1,
+    1,
+    dateTime.hour,
+    dateTime.minute,
+    dateTime.second,
+  );
+}

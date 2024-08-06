@@ -33,7 +33,7 @@ class TimeframeSelector extends StatelessWidget {
   final double segmentHeight;
 
   ///A list of [DateTimeRange]s that cannot be selected
-  final List<DateTimeRange> blockedTimeframes;
+  final Iterable<DateTimeRange> blockedTimeframes;
 
   ///The amount of buffer segments that will be added before and after any blocked timeframe
   final int blockedTimeframeBuffer;
@@ -52,7 +52,7 @@ class TimeframeSelector extends StatelessWidget {
 
     for (final blockedTimeframe in blockedTimeframes) {
       final startSegement = timeframeSegmentDifference(
-        endDateTime: blockedTimeframe.start,
+        endDateTime: toTime(blockedTimeframe.start),
       );
       final blockLength = timeframeSegmentDifference(
         endDateTime: blockedTimeframe.end,
@@ -156,7 +156,7 @@ class TimeframeSelector extends StatelessWidget {
                   return;
                 }
 
-                if (!checkBaseConstraints(
+                if (checkBaseConstraints(
                   newIndex: potentialIndex,
                   newCount: minTimeframeSegments,
                   timeSegmentCount: timeSegmentCount,
