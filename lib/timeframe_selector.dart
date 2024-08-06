@@ -1,3 +1,3 @@
 library timeframe_selector;
 
-export 'widgets/time_frame_selector.dart' show TimeframeSelector;
+export 'widgets/timeframe_selector.dart' show TimeframeSelector;

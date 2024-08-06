@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:timeframe_selector/common.dart';
 import 'package:timeframe_selector/widgets/blocked_period_overlay.dart';
-import 'package:timeframe_selector/widgets/time_frame_segment.dart';
-import 'package:timeframe_selector/widgets/time_frame_selection_overlay.dart';
+import 'package:timeframe_selector/widgets/timeframe_segment.dart';
+import 'package:timeframe_selector/widgets/timeframe_selection_overlay.dart';
 
 class TimeframeSelector extends StatelessWidget {
   const TimeframeSelector({
