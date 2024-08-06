@@ -1,39 +1,49 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+This package implements a timeframe selector, similar as what you would use in a calender.
+It is meant to be used like a DateTimeRange picker, but for timeframes instead of days.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+After not finding what I was searching for I made my own and now you found it
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+Check out the Demo: https://firebon.de:8081/TimeframeDemo/
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+https://github.com/user-attachments/assets/4cbceeea-703d-48ab-8040-af25a8de41c8
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+* Move and scale timeframe
+* Block specific time ranges from selection
+* Define minimum amount of segments
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Since its a fairly simple widget that does not handle its own state you should put it in a StatefulWidget
 
 ```dart
-const like = 'sample';
+  TimeframeSelector(
+    baseTimeframe: DateTimeRange(
+      start: DateTime(0, 1, 1, 10),
+      end: DateTime(0, 1, 1, 24),
+    ),
+    noSelectionText: "No selection",
+    timeSegmentLength: const Duration(minutes: 30),
+    minTimeframeSegments: 4,
+    selectedTimeframe: selectedTimeframe,
+    blockedTimeframes: [
+      DateTimeRange(
+        start: DateTime(0, 1, 1, 15),
+        end: DateTime(0, 1, 1, 17),
+      ),
+    ],
+    onTimeframeChange: (newTimeframe) => setState(
+      () {
+        selectedTimeframe = newTimeframe;
+      },
+    ),
+  ),
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Feel free to create a ticket on the Github repo, I will try to answer as fast as possible, but I also work fulltime.
+If you want to support me please check out my game on steam :D 
+https://store.steampowered.com/app/2226140/Crypt_Architect/
+
