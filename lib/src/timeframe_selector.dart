@@ -1,9 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:timeframe_selector/common.dart';
-import 'package:timeframe_selector/widgets/blocked_period_overlay.dart';
-import 'package:timeframe_selector/widgets/timeframe_segment.dart';
-import 'package:timeframe_selector/widgets/timeframe_selection_overlay.dart';
+import 'package:timeframe_selector/src/blocked_period_overlay.dart';
+import 'package:timeframe_selector/src/common.dart';
+import 'package:timeframe_selector/src/overlay_data.dart';
+import 'package:timeframe_selector/src/timeframe_segment.dart';
+import 'package:timeframe_selector/src/timeframe_selection_overlay.dart';
 
 class TimeframeSelector extends StatelessWidget {
   const TimeframeSelector({
@@ -11,8 +11,7 @@ class TimeframeSelector extends StatelessWidget {
     required this.timeSegmentLength,
     this.minTimeframeSegments = 1,
     this.segmentHeight = 50,
-    this.blockedTimeframes = const [],
-    this.blockedTimeframeBuffer = 0,
+    this.overlayDatas = const [],
     this.noSelectionText = '',
     required this.selectedTimeframe,
     required this.onTimeframeChange,
@@ -32,11 +31,8 @@ class TimeframeSelector extends StatelessWidget {
   ///The height of one segment
   final double segmentHeight;
 
-  ///A list of [DateTimeRange]s that cannot be selected
-  final Iterable<DateTimeRange> blockedTimeframes;
-
-  ///The amount of buffer segments that will be added before and after any blocked timeframe
-  final int blockedTimeframeBuffer;
+  ///A list of [OverlayData] to be shown in the timeframe selection
+  final Iterable<OverlayData> overlayDatas;
 
   ///The text that will be displayed while no selection has been made
   final String noSelectionText;
@@ -46,64 +42,6 @@ class TimeframeSelector extends StatelessWidget {
 
   final void Function(DateTimeRange? newTimeframe) onTimeframeChange;
   final String? Function(DateTimeRange? timeframe)? validator;
-
-  Set<Set<int>> getBlockedSegments(int timeSegmentCount) {
-    final Set<Set<int>> blockedSegmentsTemp = {};
-
-    for (final blockedTimeframe in blockedTimeframes) {
-      final startSegement = timeframeSegmentDifference(
-        endDateTime: toTime(blockedTimeframe.start),
-      );
-      final blockLength = timeframeSegmentDifference(
-        endDateTime: blockedTimeframe.end,
-        startDateTime: blockedTimeframe.start,
-      );
-
-      int startIndex = startSegement;
-      int lenght = blockLength;
-
-      if (startIndex != 0) {
-        startIndex = startSegement - blockedTimeframeBuffer;
-        lenght++;
-      }
-
-      if (startIndex + lenght < timeSegmentCount - 1) {
-        lenght += blockedTimeframeBuffer;
-      }
-
-      final newValues = List.generate(
-        lenght,
-        (index) => startIndex + index,
-      );
-
-      final aggregate = blockedSegmentsTemp.firstWhereOrNull(
-        (element) =>
-            element.contains(startIndex) ||
-            element.contains(startIndex + lenght),
-      );
-
-      if (aggregate != null) {
-        aggregate.addAll(newValues);
-        continue;
-      }
-
-      blockedSegmentsTemp.add(Set.from(newValues));
-    }
-
-    return blockedSegmentsTemp;
-  }
-
-  int timeframeSegmentDifference({
-    required DateTime endDateTime,
-    DateTime? startDateTime,
-  }) {
-    return endDateTime
-            .difference(
-              startDateTime ?? baseTimeframe.start,
-            )
-            .inMinutes ~/
-        timeSegmentLength.inMinutes;
-  }
 
   String? getTimeframeString(DateTimeRange? timeframe) {
     if (timeframe != null) {
@@ -237,25 +175,41 @@ class TimeframeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeSegmentCount =
-        timeframeSegmentDifference(endDateTime: baseTimeframe.end);
+    final timeSegmentCount = timeframeSegmentDifference(
+      endDateTime: baseTimeframe.end,
+      startDateTime: baseTimeframe.start,
+      timeSegmentLength: timeSegmentLength,
+    );
 
-    final blockedSegments = getBlockedSegments(timeSegmentCount);
-    final expandedBlockedSegments = blockedSegments
+    final allBlockedSegments = overlayDatas
+        .where(
+          (element) => element.blockSelection,
+        )
+        .map(
+          (e) => e.getSegments(
+            timeSegmentCount,
+            baseTimeframe,
+            timeSegmentLength,
+          ),
+        )
         .expand(
-          (element) => element,
+          (element) => element.expand(
+            (element) => element,
+          ),
         )
         .toSet();
 
     final timeSegments = getTimeSegments(
       timeSegmentCount,
-      expandedBlockedSegments,
+      allBlockedSegments,
     );
 
     final selectedTimeframeIndex = selectedTimeframe == null
         ? 0
         : timeframeSegmentDifference(
             endDateTime: selectedTimeframe!.start,
+            startDateTime: baseTimeframe.start,
+            timeSegmentLength: timeSegmentLength,
           );
 
     final selectedTimeframeCount = selectedTimeframe == null
@@ -263,13 +217,14 @@ class TimeframeSelector extends StatelessWidget {
         : timeframeSegmentDifference(
             endDateTime: selectedTimeframe!.end,
             startDateTime: selectedTimeframe!.start,
+            timeSegmentLength: timeSegmentLength,
           );
 
     final cleanSelectedTimeframe = checkBaseConstraints(
       newIndex: selectedTimeframeIndex,
       newCount: selectedTimeframeCount,
       timeSegmentCount: timeSegmentCount,
-      blockedSegments: expandedBlockedSegments,
+      blockedSegments: allBlockedSegments,
     )
         ? getTimeframe(
             newIndex: selectedTimeframeIndex,
@@ -312,10 +267,14 @@ class TimeframeSelector extends StatelessWidget {
                 Column(
                   children: timeSegments,
                 ),
-                TimeFrameOverlay(
-                  verticalSegmentHeight: segmentHeight,
-                  overlayData: blockedSegments,
-                ),
+                for (final overlayData in overlayDatas)
+                  TimeFrameOverlay(
+                    timeSegmentCount: timeSegmentCount,
+                    baseTimeframe: baseTimeframe,
+                    timeSegmentLength: timeSegmentLength,
+                    verticalSegmentHeight: segmentHeight,
+                    overlayData: overlayData,
+                  ),
                 if (selectedTimeframe != null)
                   TimeframeSelectionOverlay(
                     verticalSegmentHeight: segmentHeight,
@@ -326,7 +285,7 @@ class TimeframeSelector extends StatelessWidget {
                         newIndex: newIndex,
                         newCount: newCount,
                         timeSegmentCount: timeSegmentCount,
-                        blockedSegments: expandedBlockedSegments,
+                        blockedSegments: allBlockedSegments,
                       )) {
                         onTimeframeChange(
                           getTimeframe(
