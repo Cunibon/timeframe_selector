@@ -312,9 +312,9 @@ class TimeframeSelector extends StatelessWidget {
                 Column(
                   children: timeSegments,
                 ),
-                BlockedPeriodOverlay(
+                TimeFrameOverlay(
                   verticalSegmentHeight: segmentHeight,
-                  blockedSegments: blockedSegments,
+                  overlayData: blockedSegments,
                 ),
                 if (selectedTimeframe != null)
                   TimeframeSelectionOverlay(

@@ -1,18 +1,20 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-class BlockedPeriodOverlay extends StatelessWidget {
-  const BlockedPeriodOverlay({
+import 'overlay_data.dart';
+
+class TimeFrameOverlay extends StatelessWidget {
+  const TimeFrameOverlay({
     required this.verticalSegmentHeight,
-    required this.blockedSegments,
+    required this.overlayData,
     super.key,
   });
   final double verticalSegmentHeight;
-  final Set<Set<int>> blockedSegments;
+  final OverlayData overlayData;
 
   @override
   Widget build(BuildContext context) {
-    final overlays = blockedSegments.map(
+    final overlays = overlayData.map(
       (e) {
         final sortedBlock = e.sorted(
           (a, b) => a.compareTo(b),
