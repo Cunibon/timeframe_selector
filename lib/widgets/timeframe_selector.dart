@@ -64,7 +64,7 @@ class TimeframeSelector extends StatelessWidget {
 
       if (startIndex != 0) {
         startIndex = startSegement - blockedTimeframeBuffer;
-        lenght++;
+        lenght += blockedTimeframeBuffer;
       }
 
       if (startIndex + lenght < timeSegmentCount - 1) {
