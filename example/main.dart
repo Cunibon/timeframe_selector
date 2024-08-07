@@ -40,10 +40,26 @@ class _TimeFrameExampleState extends State<TimeFrameExample> {
         timeSegmentLength: const Duration(minutes: 30),
         minTimeframeSegments: 4,
         selectedTimeframe: selectedTimeframe,
-        blockedTimeframes: [
-          DateTimeRange(
-            start: DateTime(0, 1, 1, 15),
-            end: DateTime(0, 1, 1, 17),
+        overlayDatas: [
+          OverlayData(
+            timeframes: [
+              DateTimeRange(
+                start: DateTime(0, 1, 1, 15),
+                end: DateTime(0, 1, 1, 17),
+              ),
+            ],
+          ),
+          OverlayData(
+            timeframes: [
+              DateTimeRange(
+                start: DateTime(0, 1, 1, 20),
+                end: DateTime(0, 1, 1, 22),
+              ),
+            ],
+            color: Colors.green.withOpacity(0.2),
+            borderColor: Colors.green.withOpacity(0.4),
+            blockSelection: false,
+            child: const Text("Hello world!"),
           ),
         ],
         onTimeframeChange: (newTimeframe) => setState(

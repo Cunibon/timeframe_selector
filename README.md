@@ -27,10 +27,14 @@ Since its a fairly simple widget that does not handle its own state you should p
     timeSegmentLength: const Duration(minutes: 30),
     minTimeframeSegments: 4,
     selectedTimeframe: selectedTimeframe,
-    blockedTimeframes: [
-      DateTimeRange(
-        start: DateTime(0, 1, 1, 15),
-        end: DateTime(0, 1, 1, 17),
+    overlayDatas: [
+      OverlayData(
+        timeframes: [
+          DateTimeRange(
+            start: DateTime(0, 1, 1, 15),
+            end: DateTime(0, 1, 1, 17),
+          ),
+        ],
       ),
     ],
     onTimeframeChange: (newTimeframe) => setState(
