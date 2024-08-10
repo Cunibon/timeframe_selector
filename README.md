@@ -5,7 +5,7 @@ After not finding what I was searching for I made my own and now you found it
 
 Check out the Demo: https://firebon.de:8081/TimeframeDemo/
 
-https://github.com/user-attachments/assets/4cbceeea-703d-48ab-8040-af25a8de41c8
+![Unbenannt](https://github.com/user-attachments/assets/0aeef18f-fc58-4f91-b94f-ce7ee22dc303)
 
 ## Features
 
