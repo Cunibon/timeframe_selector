@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timeframe_selector/widgets/vertical_grabber.dart';
+import 'package:timeframe_selector/src/vertical_grabber.dart';
 
 class TimeframeSelectionOverlay extends StatelessWidget {
   const TimeframeSelectionOverlay({
