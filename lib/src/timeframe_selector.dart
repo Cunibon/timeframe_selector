@@ -12,7 +12,6 @@ class TimeframeSelector extends StatelessWidget {
     this.minTimeframeSegments = 1,
     this.segmentHeight = 50,
     this.overlayDatas = const [],
-    this.noSelectionText = '',
     required this.selectedTimeframe,
     required this.onTimeframeChange,
     this.validator,
@@ -34,23 +33,11 @@ class TimeframeSelector extends StatelessWidget {
   ///A list of [OverlayData] to be shown in the timeframe selection
   final Iterable<OverlayData> overlayDatas;
 
-  ///The text that will be displayed while no selection has been made
-  final String noSelectionText;
-
   ///The selected timeframe that will be displayed
   final DateTimeRange? selectedTimeframe;
 
   final void Function(DateTimeRange? newTimeframe) onTimeframeChange;
   final String? Function(DateTimeRange? timeframe)? validator;
-
-  String? getTimeframeString(DateTimeRange? timeframe) {
-    if (timeframe != null) {
-      return timeRangeToString(
-        timeframe,
-      );
-    }
-    return null;
-  }
 
   List<Widget> getTimeSegments(
     int timeSegmentCount,
@@ -246,11 +233,6 @@ class TimeframeSelector extends StatelessWidget {
                 ),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-                getTimeframeString(cleanSelectedTimeframe) ?? noSelectionText),
-          ),
           Container(
             decoration: BoxDecoration(
               boxShadow: [
