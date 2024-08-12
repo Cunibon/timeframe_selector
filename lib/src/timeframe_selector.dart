@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:timeframe_selector/src/blocked_period_overlay.dart';
 import 'package:timeframe_selector/src/common.dart';
 import 'package:timeframe_selector/src/overlay_data.dart';
+import 'package:timeframe_selector/src/timeframe_overlay.dart';
 import 'package:timeframe_selector/src/timeframe_segment.dart';
 import 'package:timeframe_selector/src/timeframe_selection_overlay.dart';
 
@@ -10,13 +10,18 @@ class TimeframeSelector extends StatelessWidget {
     required this.baseTimeframe,
     required this.timeSegmentLength,
     this.minTimeframeSegments = 1,
+    this.maxTimeframeSegments,
     this.segmentHeight = 50,
     this.overlayDatas = const [],
     required this.selectedTimeframe,
     required this.onTimeframeChange,
     this.validator,
     super.key,
-  });
+  })  : assert(
+          (maxTimeframeSegments ?? minTimeframeSegments) >=
+              minTimeframeSegments,
+        ),
+        assert(minTimeframeSegments > 1);
 
   ///The time range in which a selection can be made
   final DateTimeRange baseTimeframe;
@@ -26,6 +31,9 @@ class TimeframeSelector extends StatelessWidget {
 
   ///The minimum amount of segments that can make up a selection
   final int minTimeframeSegments;
+
+  ///The maximum amount of segments that can make up a selection
+  final int? maxTimeframeSegments;
 
   ///The height of one segment
   final double segmentHeight;
@@ -120,7 +128,10 @@ class TimeframeSelector extends StatelessWidget {
   }) {
     if (newIndex < 0 ||
         newIndex + newCount > timeSegmentCount ||
-        newCount < minTimeframeSegments) {
+        newCount < minTimeframeSegments ||
+        (maxTimeframeSegments == null
+            ? false
+            : newCount > maxTimeframeSegments!)) {
       return false;
     }
 

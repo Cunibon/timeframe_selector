@@ -58,6 +58,7 @@ class _TimeFrameExampleState extends State<TimeFrameExample> {
             ),
             timeSegmentLength: const Duration(minutes: 30),
             minTimeframeSegments: 4,
+            maxTimeframeSegments: 8,
             selectedTimeframe: selectedTimeframe,
             overlayDatas: [
               OverlayData(

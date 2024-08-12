@@ -1,3 +1,8 @@
+## 0.2.1
+
+**Changes**
+* Added maxTimeframeSegments
+
 ## 0.2.0
 
 **Breaking**
