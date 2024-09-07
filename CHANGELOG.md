@@ -1,3 +1,9 @@
+## 0.2.2
+
+**Changes**
+* Added Hide Handles bool
+* Made OverlayArea passthough tap events
+
 ## 0.2.1
 
 **Changes**

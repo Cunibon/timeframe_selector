@@ -12,6 +12,7 @@ class TimeframeSelector extends StatelessWidget {
     this.minTimeframeSegments = 1,
     this.maxTimeframeSegments,
     this.segmentHeight = 50,
+    this.hideHandles = false,
     this.overlayDatas = const [],
     required this.selectedTimeframe,
     required this.onTimeframeChange,
@@ -21,7 +22,7 @@ class TimeframeSelector extends StatelessWidget {
           (maxTimeframeSegments ?? minTimeframeSegments) >=
               minTimeframeSegments,
         ),
-        assert(minTimeframeSegments > 1);
+        assert(minTimeframeSegments >= 1);
 
   ///The time range in which a selection can be made
   final DateTimeRange baseTimeframe;
@@ -37,6 +38,9 @@ class TimeframeSelector extends StatelessWidget {
 
   ///The height of one segment
   final double segmentHeight;
+
+  ///Hides the selection handles
+  final bool hideHandles;
 
   ///A list of [OverlayData] to be shown in the timeframe selection
   final Iterable<OverlayData> overlayDatas;
@@ -273,6 +277,7 @@ class TimeframeSelector extends StatelessWidget {
                     verticalSegmentHeight: segmentHeight,
                     selectedIndex: selectedTimeframeIndex,
                     selectedCount: selectedTimeframeCount,
+                    hideHandles: hideHandles,
                     updateSelection: (newIndex, newCount) {
                       if (checkBaseConstraints(
                         newIndex: newIndex,

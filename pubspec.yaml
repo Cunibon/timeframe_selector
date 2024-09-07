@@ -1,6 +1,6 @@
 name: timeframe_selector
 description: "A widget for simple timeframe selection similar to calenders"
-version: 0.2.1
+version: 0.2.2
 repository: https://github.com/Cunibon/timeframe_selector
 
 environment:

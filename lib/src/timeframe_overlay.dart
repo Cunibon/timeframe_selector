@@ -31,36 +31,46 @@ class TimeFrameOverlay extends StatelessWidget {
         final sortedBlock = e.sorted(
           (a, b) => a.compareTo(b),
         );
+
+        Widget overlay = Container(
+          decoration: BoxDecoration(
+            color: overlayData.color,
+            border: Border.all(
+              color: overlayData.borderColor,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          height: verticalSegmentHeight * sortedBlock.length,
+          child: overlayData.child == null
+              ? null
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 74,
+                    ),
+                    overlayData.child!
+                  ],
+                ),
+        );
+
+        if (overlayData.onTap != null) {
+          overlay = GestureDetector(
+            onTap: overlayData.onTap!,
+            child: overlay,
+          );
+        } else {
+          overlay = IgnorePointer(
+            child: overlay,
+          );
+        }
+
         return Column(
           children: [
             SizedBox(
               height: verticalSegmentHeight * sortedBlock.first,
             ),
-            GestureDetector(
-              onTap:
-                  overlayData.onTap == null ? null : () => overlayData.onTap!(),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: overlayData.color,
-                  border: Border.all(
-                    color: overlayData.borderColor,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                height: verticalSegmentHeight * sortedBlock.length,
-                child: overlayData.child == null
-                    ? null
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            width: 74,
-                          ),
-                          overlayData.child!
-                        ],
-                      ),
-              ),
-            ),
+            overlay,
           ],
         );
       },

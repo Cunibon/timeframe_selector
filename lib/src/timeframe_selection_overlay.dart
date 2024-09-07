@@ -4,6 +4,7 @@ import 'package:timeframe_selector/src/vertical_grabber.dart';
 class TimeframeSelectionOverlay extends StatelessWidget {
   const TimeframeSelectionOverlay({
     required this.verticalSegmentHeight,
+    this.hideHandles = false,
     required this.selectedIndex,
     required this.selectedCount,
     required this.updateSelection,
@@ -14,6 +15,7 @@ class TimeframeSelectionOverlay extends StatelessWidget {
   static const circularRadius = Radius.circular(8);
 
   final double verticalSegmentHeight;
+  final bool hideHandles;
 
   final int selectedIndex;
   final int selectedCount;
@@ -54,50 +56,52 @@ class TimeframeSelectionOverlay extends StatelessWidget {
                 height: verticalSegmentHeight * selectedCount,
               ),
             ),
-            Positioned(
-              top: 0,
-              left: 78,
-              child: VerticalGrabber(
-                color: Colors.blueAccent,
-                height: 10,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: circularRadius,
-                  bottomRight: circularRadius,
+            if (!hideHandles) ...[
+              Positioned(
+                top: 0,
+                left: 78,
+                child: VerticalGrabber(
+                  color: Colors.blueAccent,
+                  height: 10,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: circularRadius,
+                    bottomRight: circularRadius,
+                  ),
+                  margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                  onVerticalDragUpdate: (details) {
+                    verticalDiff -= details.delta.dy;
+                    if (verticalDiff >= verticalSegmentHeight) {
+                      updateSelection(selectedIndex - 1, selectedCount + 1);
+                    } else if (verticalDiff <= -verticalSegmentHeight) {
+                      updateSelection(selectedIndex + 1, selectedCount - 1);
+                    }
+                  },
+                  onVerticalDragEnd: (details) => verticalDiff = 0,
                 ),
-                margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                onVerticalDragUpdate: (details) {
-                  verticalDiff -= details.delta.dy;
-                  if (verticalDiff >= verticalSegmentHeight) {
-                    updateSelection(selectedIndex - 1, selectedCount + 1);
-                  } else if (verticalDiff <= -verticalSegmentHeight) {
-                    updateSelection(selectedIndex + 1, selectedCount - 1);
-                  }
-                },
-                onVerticalDragEnd: (details) => verticalDiff = 0,
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 12,
-              child: VerticalGrabber(
-                color: Colors.blueAccent,
-                height: 10,
-                borderRadius: const BorderRadius.only(
-                  topLeft: circularRadius,
-                  topRight: circularRadius,
+              Positioned(
+                bottom: 0,
+                right: 12,
+                child: VerticalGrabber(
+                  color: Colors.blueAccent,
+                  height: 10,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: circularRadius,
+                    topRight: circularRadius,
+                  ),
+                  margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                  onVerticalDragUpdate: (details) {
+                    verticalDiff -= details.delta.dy;
+                    if (verticalDiff >= verticalSegmentHeight) {
+                      updateSelection(selectedIndex, selectedCount - 1);
+                    } else if (verticalDiff <= -verticalSegmentHeight) {
+                      updateSelection(selectedIndex, selectedCount + 1);
+                    }
+                  },
+                  onVerticalDragEnd: (details) => verticalDiff = 0,
                 ),
-                margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                onVerticalDragUpdate: (details) {
-                  verticalDiff -= details.delta.dy;
-                  if (verticalDiff >= verticalSegmentHeight) {
-                    updateSelection(selectedIndex, selectedCount - 1);
-                  } else if (verticalDiff <= -verticalSegmentHeight) {
-                    updateSelection(selectedIndex, selectedCount + 1);
-                  }
-                },
-                onVerticalDragEnd: (details) => verticalDiff = 0,
-              ),
-            ),
+              )
+            ],
           ],
         ),
       ],
